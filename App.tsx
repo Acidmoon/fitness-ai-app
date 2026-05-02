@@ -3,7 +3,10 @@ import { useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 
 import { AppNavigator } from "./src/navigation/AppNavigator";
-import { getAccessToken } from "./src/services/auth-storage";
+import {
+  getAccessToken,
+  removeAccessToken,
+} from "./src/services/auth-storage";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +25,11 @@ export default function App() {
     setIsLoggedIn(true);
   }, []);
 
+  const handleLogout = useCallback(async () => {
+    await removeAccessToken();
+    setIsLoggedIn(false);
+  }, []);
+
   if (!ready) {
     return null;
   }
@@ -32,6 +40,7 @@ export default function App() {
       <AppNavigator
         isLoggedIn={isLoggedIn}
         onLoginSuccess={handleLoginSuccess}
+        onLogout={handleLogout}
       />
     </QueryClientProvider>
   );
